@@ -1,3 +1,2 @@
 [console_scripts]
-bible=bible.main:main
-
+bible = bible.main:main

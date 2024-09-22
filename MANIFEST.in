@@ -1,0 +1,11 @@
+include LICENSE
+include README.md
+include requirements.txt
+
+# Include all Python files
+recursive-include bible *.py
+
+# Include all XML translation files
+recursive-include bible/translations *.xml
+
+# Include any other data files or directories you want in your package

@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="bible",
@@ -7,9 +7,9 @@ setup(
     author="rwev",
     author_email="rwev@rwev.dev",
     url="https://gitlab.com/rwev/bibt",
-    packages=["bible"],
+    packages=find_packages(),
     include_package_data=True,
-    entry_points={"console_scripts": ("bible=bible.main:main")},
+    entry_points={"console_scripts": ["bible=bible.main:main"]},
     install_requires=["PyHyphen"],
     license="GNU GPL 3.0",
 )

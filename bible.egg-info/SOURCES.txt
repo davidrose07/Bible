@@ -1,7 +1,14 @@
 LICENSE
 MANIFEST.in
 README.md
+requirements.txt
 setup.py
+__pycache__/__init__.cpython-310.pyc
+__pycache__/listwin.cpython-310.pyc
+__pycache__/main.cpython-310.pyc
+__pycache__/reader.cpython-310.pyc
+__pycache__/redletter.cpython-310.pyc
+__pycache__/textwin.cpython-310.pyc
 bible/__init__.py
 bible/listwin.py
 bible/logs.py
@@ -15,7 +22,8 @@ bible.egg-info/dependency_links.txt
 bible.egg-info/entry_points.txt
 bible.egg-info/requires.txt
 bible.egg-info/top_level.txt
+bible/translations/AMP.xml
 bible/translations/ESV.xml
 bible/translations/KJV.xml
 bible/translations/NIV.xml
-bible/translations/red_letter.txt
+bible/translations/NLT.xml

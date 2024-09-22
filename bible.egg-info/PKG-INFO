@@ -6,8 +6,5 @@ Home-page: https://gitlab.com/rwev/bibt
 Author: rwev
 Author-email: rwev@rwev.dev
 License: GNU GPL 3.0
-Platform: UNKNOWN
 License-File: LICENSE
-
-UNKNOWN
-
+Requires-Dist: PyHyphen
