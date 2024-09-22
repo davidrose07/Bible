@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: bible
+Version: 0.1.0
+Summary: Read the Bible in the terminal with Python and Curses
+Home-page: https://gitlab.com/rwev/bibt
+Author: rwev
+Author-email: rwev@rwev.dev
+License: GNU GPL 3.0
+Platform: UNKNOWN
+License-File: LICENSE
+
+UNKNOWN
+
