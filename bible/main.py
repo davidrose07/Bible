@@ -3,6 +3,9 @@
 import curses
 from hyphen import Hyphenator
 from textwrap import wrap
+""" import pyttsx3
+import threading
+import queue """
 
 from .reader import Reader
 from .textwin import TextWindow
@@ -27,7 +30,7 @@ class Main:
         self.stdscr.clear()
 
         #self.log = Log()  # Log information
-        
+
         self.initialize_reader()     # Initialize the reader to set up the document structure
         self.initialize_windows()    # Create the necessary windows for the application
         self.initialize_selections() # Set initial selections for navigation
@@ -129,43 +132,11 @@ class Main:
             wrapped_lines = wrap(text, width=self.text_win._width - 3, replace_whitespace=False)
             for line in wrapped_lines:
                 wrapped_text_tuples.append((line, is_red))
-
+            
         self.text_win.update_text_title(text_title)
         self.text_win.update_text(wrapped_text_tuples)
 
-
-
-    """ def update_text(self):
-        '''Update the text display based on the current selections.'''
-        trans_name = self.translations_win.get_selection_tuple()[1] # version name
-        book_name = self.books_win.get_selection_tuple()[1]         # book name
-        chapter_name = (self.chapters_win.get_selection_tuple()[1],)   # chapter name
-        verse = self.verses_win.get_selection_tuple()[1]
-
-        text_title = " {0} {1}:{3} [{2}]".format(
-            book_name, str(chapter_name[0]), trans_name, verse  # Adjust indexing if needed
-        )
-
-        raw_text = self.reader.get_chapter_text(
-            self.books_win.get_selection_tuple()[1],
-            self.chapters_win.get_selection_tuple()[1],
-            verse_start=verse,
-        )
-
-        text = "\n".join(
-            wrap(
-                raw_text,
-                width=self.text_width - 3,
-                break_long_words=False,   # Prevent breaking words that are too long
-                break_on_hyphens=False,   # Prevent breaking words on hyphens
-            )[: curses.LINES - 2]
-        )
-
-        self.text_win.update_text_title(text_title)
-        self.text_win.update_text(text) """
-
-    
-
+        
     def deactivate_all_windows(self):
         """Deactivate all windows, removing focus."""
         for (i, win) in self.windows_tuples:
@@ -205,6 +176,7 @@ class Main:
 
             self.update_selections()
             self.update_text()
+        
 
 def main():
     """Entry point for the curses application."""
