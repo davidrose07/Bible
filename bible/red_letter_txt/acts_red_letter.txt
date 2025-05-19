@@ -1,0 +1,8 @@
+1:[*list(range(4,6)), *list(range(7,9))],
+9:[*list(range(4,7)), *list(range(10,13)), *list(range(15,17))],
+11:[16],
+18:[*list(range(9,11))],
+20:[35],
+22:[*list(range(7,9)), 10, 18, 21],
+23:[11],
+26:[*list(range(14,19))]

@@ -3,6 +3,20 @@
 import curses
 from hyphen import Hyphenator
 from textwrap import wrap
+import logging, os
+
+## TEMP ##
+os.makedirs("logs", exist_ok=True)
+
+# Configure logging
+logging.basicConfig(
+    filename='logs/app.log',             # log file path
+    level=logging.INFO,                  # log level (can be DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    force=True
+)
+
+##########
 """ import pyttsx3
 import threading
 import queue """
@@ -125,14 +139,13 @@ class Main:
 
         verse_start = int(verse)  # Ensure verse is an integer
         formatted_text_tuples = self.reader.get_chapter_text(book_name, chapter_name, verse_start)
-
+        
         # Wrap text with tracking red letter status
         wrapped_text_tuples = []
-        for text, is_red in formatted_text_tuples:
+        for text, is_red, is_title in formatted_text_tuples:
             wrapped_lines = wrap(text, width=self.text_win._width - 3, replace_whitespace=False)
             for line in wrapped_lines:
-                wrapped_text_tuples.append((line, is_red))
-            
+                wrapped_text_tuples.append((line, is_red, is_title))
         self.text_win.update_text_title(text_title)
         self.text_win.update_text(wrapped_text_tuples)
 

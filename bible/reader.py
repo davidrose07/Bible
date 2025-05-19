@@ -5,6 +5,18 @@ from .redletter import RedLetter
 
 TRANSLATIONS_DIR = join(dirname(__file__), "translations")  # Path to the translations directory
 
+import logging, os
+
+## TEMP ##
+os.makedirs("logs", exist_ok=True)
+
+# Configure logging
+logging.basicConfig(
+    filename='logs/app.log',             # log file path
+    level=logging.INFO,                  # log level (can be DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    force=True
+)
 
 class Reader:
     def __init__(self):
@@ -65,24 +77,20 @@ class Reader:
             vel.attrib["n"] for vel in self.get_verses_elements(book_str, chapter_str)
         ]
 
-    """ def get_chapter_text(self, book_str, chapter_str, verse_start=1):
-        '''Generate the text of a chapter starting from a specific verse.'''
-        vels = filter(
-            lambda v: int(v.attrib["n"]) >= int(verse_start),
-            self.get_verses_elements(book_str, chapter_str),
-        )
-                       
-        return " ".join(map(lambda v: "({0}) {1}".format(v.attrib["n"], v.text), vels)) """
+    
     
     def get_chapter_text(self, book_str, chapter_str, verse_start=1):
-        """Generate the text of a chapter starting from a specific verse with red letter consideration."""
+        """Generate the text of a chapter starting from a specific verse with red letter consideration and Title for verses."""
         verses_elements = self.get_verses_elements(book_str, chapter_str)
         text_with_red = []
         for v in verses_elements:
+            #if verse n=0 then its a title that needs to be bigger, bold, and centered
             verse_num = int(v.attrib["n"])
+            if verse_num == 0:
+                text_with_red.append((v.text.strip(), False, True))
             if verse_num >= int(verse_start):
                 is_red = self.red_letter.is_red_letter(book_str, chapter_str, verse_num)
-                text_with_red.append((f"({verse_num}) {v.text}", is_red))
+                text_with_red.append((f"({verse_num}) {v.text}", is_red, False))
         return text_with_red
 
         
