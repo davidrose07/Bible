@@ -1,7 +1,18 @@
+from typing import Dict, List
+from .logs import get_logger
+
+logger = get_logger(__name__)
 
 class RedLetter:
-    def __init__(self):
-        self.red_letter_verses = {
+    """
+    A class to determine if a Bible verse is considered a 'red-letter' verse (i.e., words spoken by Jesus).
+    """
+    def __init__(self) -> None:
+        """
+        Initialize the red_letter_verses dictionary with references to red-letter verses for specific books.
+        The data maps book names (lowercase) to a dictionary of chapter numbers and lists of red-letter verse numbers.
+        """
+        self.red_letter_verses: Dict[str, Dict[int, List[int]]] = {
             'matthew': {3:[15],
                         4:[4, 7, 10, 17, 19],
                         5:[*list(range(3,49))],
@@ -124,7 +135,15 @@ class RedLetter:
             
         }
 
-    def is_red_letter(self, book, chapter, verse):
+    def is_red_letter(self, book: str, chapter: str, verse: str) -> bool:
+        """
+        Determine whether a specific verse is a red-letter verse.
+
+        :param book: Name of the book (e.g., 'matthew') in lowercase.
+        :param chapter: Chapter number as a string.
+        :param verse: Verse number as a string.
+        :return: True if the verse is a red-letter verse, False otherwise.
+        """
         book = book.lower()
         chapter= int(chapter)
         verse = int(verse)

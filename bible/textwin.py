@@ -1,8 +1,12 @@
 import curses
 import re
+from typing import List, Tuple
+from .logs import get_logger
+
+logger = get_logger(__name__)
 
 class TextWindow:
-    def __init__(self, win, width):
+    def __init__(self, win: curses.window, width: int) -> None:
         """
         Initialize a new text display window within a curses window.
 
@@ -11,24 +15,27 @@ class TextWindow:
         """
         
         # The parent window containing this text window
-        self._outer_win = win
+        self._outer_win: curses.window = win
         self._outer_win.box()  # Draw a border around the outer window
 
-        self._width = width  # Store the width of the text window
+        self._width: int = width  # Store the width of the text window
 
         # Create an inner window for displaying text, with padding to not overwrite the box border
-        self._inner_win = self._outer_win.derwin(
+        self._inner_win: curses.window = self._outer_win.derwin(
             curses.LINES - 2, self._width - 2, 1, 1
         )
         self.init_color()
 
-    def init_color(self):
+    def init_color(self) -> None:
+        """
+        Initialize color pairs used in the window.
+        """
         curses.start_color()
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
         curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
 
-    def update_text_title(self, title):
+    def update_text_title(self, title: str) -> None:
         """
         Update the title at the top of the text window.
 
@@ -43,26 +50,18 @@ class TextWindow:
 
         self._outer_win.addstr(0, start_pad, title, curses.color_pair(2))
         self._outer_win.refresh()  # Refresh the window to display the new title
-
-    '''def update_text(self, text_tuples):
-        """Update the text content of the inner window."""
-        self._inner_win.clear()  # Clear the inner window to prepare for new text
-        y = 0
-        
-        for line, is_red in text_tuples:
-            color_pair = curses.color_pair(3) if is_red else curses.color_pair(0)
-            try:
-                self._inner_win.addstr(y, 0, line, color_pair)
-            except curses.error as e:
-                # Handle cases where adding text might exceed the window size
-                pass
-            y += 1
-            if y >= curses.LINES - 2:  # Prevent writing outside the window
-                break
-        self._inner_win.refresh()  # Refresh the inner window to update the display'''
     
-    def update_text(self, text_tuples):
-        """Update the text content of the inner window, with red text inside quotes (even across lines)."""
+    def update_text(self, text_tuples: List[Tuple[str, bool, bool]]) -> None:
+        """Update the inner window content.
+
+        Red text (inside quotes) is highlighted. Titles are bold and cyan. Normal text is white.
+        Handles open quotes across multiple lines.
+
+        :param text_tuples: A list of tuples where each tuple is:
+            - text (str): The line of text to display.
+            - is_red (bool): Whether this line contains red-letter text.
+            - is_title (bool): Whether this line is a title.
+        """
         self._inner_win.clear()
         y = 0
 
@@ -123,7 +122,7 @@ class TextWindow:
                             pass
 
                         # Toggle quote state
-                        quote_open = not quote_open
+                        quote_open: bool = not quote_open
                         last_index = start + 1
 
                     # Print the rest of the line

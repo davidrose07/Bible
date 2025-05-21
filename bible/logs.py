@@ -3,18 +3,28 @@ from logging.handlers import RotatingFileHandler
 import os
 
 CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_FILE = os.path.join(CURRENT_DIR, "bible", "logs", "exception.log")
 
 
-class Log(logging.Logger):
-    def __init__(self, name=__name__, log_file=f'{CURRENT_DIR}/exception.log'):
-        super().__init__(name)
-        self.addHandler(self._get_file_handler(log_file))
-    
-    def _get_file_handler(self, log_file):
-        fh = RotatingFileHandler(log_file, maxBytes=10240, backupCount=5)
+def get_logger(name: str = __name__) -> logging.Logger:
+    """
+    Return a configured logger that writes to a rotating file.
+
+    Ensures that the logger is configured only once per name,
+    even when imported from multiple modules.
+
+    :param name: Logger name, typically use __name__
+    :return: Configured logger instance
+    """
+    logger = logging.getLogger(name)
+
+    if not logger.handlers:
+        logger.setLevel(logging.DEBUG)
+
+        handler = RotatingFileHandler(LOG_FILE, maxBytes=10240, backupCount=5)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        return fh
-    
+        handler.setFormatter(formatter)
 
-    
+        logger.addHandler(handler)
+
+    return logger

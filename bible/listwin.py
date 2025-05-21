@@ -1,8 +1,11 @@
 import curses
+from .logs import get_logger
+from typing import List, Tuple
 
+logger = get_logger(__name__)
 
 class ListWindow:
-    def __init__(self, win, title, item_tuples, width):
+    def __init__(self, win: curses.window, title: str, item_tuples: List[Tuple[int,str]], width: int) -> None:
         """
         Initialize a list window for displaying selectable items within a curses window.
 
@@ -21,12 +24,13 @@ class ListWindow:
         self.init_color()
         self.select_first()  # Initialize the selection to the first item.
 
-    def init_color(self):
+    def init_color(self) -> None:
+        """Initialize color pairs used for drawing."""
         curses.start_color()
         curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
         curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
-    def set_active(self, is_active):
+    def set_active(self, is_active: bool) -> None:
         """
         Set the active state of the window and redraw.
 
@@ -35,7 +39,7 @@ class ListWindow:
         self._active = is_active
         self.draw()
 
-    def get_selection_tuple(self):
+    def get_selection_tuple(self) -> Tuple[int,str]:
         """
         Return the currently selected item tuple.
 
@@ -43,7 +47,7 @@ class ListWindow:
         """
         return self._selected_tuple
 
-    def set_selection_tuples(self, item_tuples):
+    def set_selection_tuples(self, item_tuples: list[tuple[int,str]]) -> None:
         """
         Set the list of item tuples and update the selection if necessary.
 
@@ -55,7 +59,7 @@ class ListWindow:
         else:
             self.draw()
 
-    def increment_selection(self, i):
+    def increment_selection(self, i: int) -> None:
         """
         Move the selection up or down by 'i' positions.
 
@@ -65,7 +69,7 @@ class ListWindow:
         if new_index < 0 or new_index >= len(self._item_tuples):
             return
 
-        self._selected_tuple = self._item_tuples[new_index]
+        self._selected_tuple: tuple[int,str] = self._item_tuples[new_index]
 
         (bound_lower, bound_upper) = self._bounds
 
@@ -75,19 +79,19 @@ class ListWindow:
         shift = shift_down or shift_up
 
         if shift:
-            self._bounds = (bound_lower + i, bound_upper + i)
+            self._bounds: tuple[int,int] = (bound_lower + i, bound_upper + i)
 
         self.draw()
 
-    def select_first(self):
+    def select_first(self) -> None:
         """
         Select the first item in the list and set the drawing bounds.
         """
-        self._selected_tuple = self._item_tuples[0]
-        self._bounds = (0, self.MAX_ITEMS)
+        self._selected_tuple: Tuple[int, str] = self._item_tuples[0]
+        self._bounds: Tuple[int, int] = (0, self.MAX_ITEMS)
         self.draw()
 
-    def write_title(self):
+    def write_title(self) -> None:
         """
         Write the window title, centered and underlined.
         """
@@ -95,7 +99,7 @@ class ListWindow:
             0, 0, self._title.center(self._width, " "), self._width, curses.A_UNDERLINE
         )
 
-    def draw(self):
+    def draw(self) -> None:
         """
         Redraw the list window, updating the display of items and the selection.
         """

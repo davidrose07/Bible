@@ -3,48 +3,39 @@
 import curses
 from hyphen import Hyphenator
 from textwrap import wrap
-import logging, os
-
-## TEMP ##
-os.makedirs("logs", exist_ok=True)
-
-# Configure logging
-logging.basicConfig(
-    filename='logs/app.log',             # log file path
-    level=logging.INFO,                  # log level (can be DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    force=True
-)
-
-##########
-""" import pyttsx3
-import threading
-import queue """
-
+from typing import List, Tuple, Any
 from .reader import Reader
 from .textwin import TextWindow
 from .listwin import ListWindow
-
+from .logs import get_logger
 
 TRANSLATIONS_WIDTH = 6
 BOOKS_WIDTH = 14
 CHAPTERS_WIDTH = 4
 VERSES_WIDTH = 4
 
+logger = get_logger(__name__)
 h_en = Hyphenator("en_US")
 
-def make_enumeration(list_):
-    """Enumerate a list and return a list of tuples with each tuple containing an index and the list item."""
+def make_enumeration(list_: List[str]) -> List[Tuple[int, str]]:
+    """
+    Enumerate a list and return a list of (index, item) tuples.
+
+    :param list_: A list of strings.
+    :return: List of tuples pairing index with item.
+    """
     return list(enumerate(list_))
 
 class Main:
-    def __init__(self, stdscr):
-        """Initialize the main application interface."""
+    def __init__(self, stdscr: Any) -> None:
+        """
+        Initialize the main application interface.
+        
+        :param stdscr: The standard screen window provided by curses.wrapper().
+        """
         self.stdscr = stdscr
         self.stdscr.clear()
-
-        #self.log = Log()  # Log information
-
+        
         self.initialize_reader()     # Initialize the reader to set up the document structure
         self.initialize_windows()    # Create the necessary windows for the application
         self.initialize_selections() # Set initial selections for navigation
@@ -53,14 +44,13 @@ class Main:
         self.update_text()           # Display the initial text
 
         self.start_input_loop()      # Start the input event loop
-
-    
-    def initialize_reader(self):
+   
+    def initialize_reader(self) -> None:
         """Initialize the reader object for reading text data."""
         self.reader = Reader()
         self.reader.set_root("NIV")  # Set the root text version, e.g., NIV Bible
 
-    def initialize_windows(self):
+    def initialize_windows(self) -> None:
         """Initialize the windows for displaying different types of data."""
         start_x = 0
 
@@ -107,7 +97,7 @@ class Main:
             self.text_width,
         )
    
-    def initialize_selections(self):
+    def initialize_selections(self) -> None:
         """Initialize default selections for windows."""
         self.windows_tuples = make_enumeration(
             [self.translations_win, self.books_win, self.chapters_win, self.verses_win]
@@ -115,7 +105,7 @@ class Main:
         self.selected_window = self.windows_tuples[1]  # Initially select the books window
         self.selected_window[1].set_active(True)
 
-    def update_selections(self):
+    def update_selections(self) -> None:
         """Update the selections in response to user input or initialization."""
         trans = self.translations_win.get_selection_tuple()[1]
         self.reader.set_root(trans)
@@ -125,10 +115,12 @@ class Main:
         self.chapters_win.set_selection_tuples(chapter_tuples)
 
         chapter = self.chapters_win.get_selection_tuple()[1]
-        verses_tuples = make_enumeration(self.reader.get_verses(book, chapter))
+        verses_list = [v for v in self.reader.get_verses(book,chapter) if v != "0"]
+        verses_tuples = make_enumeration(verses_list)
+        
         self.verses_win.set_selection_tuples(verses_tuples)
 
-    def update_text(self):
+    def update_text(self) -> None:
         """Update the text display based on the current selections."""
         trans_name = self.translations_win.get_selection_tuple()[1]
         book_name = self.books_win.get_selection_tuple()[1]
@@ -138,24 +130,23 @@ class Main:
         text_title = f"{book_name} {chapter_name}:{verse} [{trans_name}]"
 
         verse_start = int(verse)  # Ensure verse is an integer
-        formatted_text_tuples = self.reader.get_chapter_text(book_name, chapter_name, verse_start)
+        formatted_text_tuples: List[Tuple[str, bool, bool]] = self.reader.get_chapter_text(book_name, chapter_name, verse_start)
         
         # Wrap text with tracking red letter status
-        wrapped_text_tuples = []
+        wrapped_text_tuples: List[Tuple[str, bool, bool]] = []
         for text, is_red, is_title in formatted_text_tuples:
             wrapped_lines = wrap(text, width=self.text_win._width - 3, replace_whitespace=False)
             for line in wrapped_lines:
                 wrapped_text_tuples.append((line, is_red, is_title))
         self.text_win.update_text_title(text_title)
         self.text_win.update_text(wrapped_text_tuples)
-
-        
-    def deactivate_all_windows(self):
+    
+    def deactivate_all_windows(self) -> None:
         """Deactivate all windows, removing focus."""
         for (i, win) in self.windows_tuples:
             win.set_active(False)
 
-    def increment_window(self, i):
+    def increment_window(self, i) -> None:
         """Move the focus between windows based on user navigation input."""
         self.deactivate_all_windows()
         new_windex = self.selected_window[0] + i
@@ -166,7 +157,7 @@ class Main:
         self.selected_window = self.windows_tuples[new_windex]
         self.selected_window[1].set_active(True)
 
-    def start_input_loop(self):
+    def start_input_loop(self) -> None:
         """Start the input loop to receive keyboard commands."""
         key = None
         while key != ord("q"):
@@ -190,8 +181,7 @@ class Main:
             self.update_selections()
             self.update_text()
         
-
-def main():
+def main() -> None:
     """Entry point for the curses application."""
     curses.wrapper(Main)
 
