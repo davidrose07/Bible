@@ -9,12 +9,26 @@ This is a modified version of the [Bible project](https://github.com/rwev/bible)
 - **Red Letter Support:** Identifies and highlights the words of Jesus in red (if supported by the translation).
 - **Customizable Translations:** Allows users to add their own Bible translations in XML format.
 - **Search and Navigation:** Quickly navigate through books, chapters, and verses.
+- **Robust Logging:** Logs errors and usage to a rotating log file using `logging` and `RotatingFileHandler`.
+- **Unit Tested:** Includes a growing suite of tests for critical components (reader, red-letter logic, UI).
 
 ## Requirements
 - Python 3.10 or later
-- Required Python libraries:
-  - `curses`
-  - `xml.etree.ElementTree`
+- Recommended to use a virtual environment
+- Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+## Running Tests
+
+This project includes unit tests for all major components.
+
+```bash
+pytest tests/
+```
+
+Ensure `pytest` is installed (included in `requirements.txt`).
 
 ## Installation
 1. Clone the repository:
@@ -40,33 +54,51 @@ To add a new Bible translation:
    - Root tag: `<bible>`
    - Books: `<b n="BookName">`
    - Chapters: `<c n="ChapterNumber">`
+   - Titles: `<v n="0">Title Name</v>`
    - Verses: `<v n="VerseNumber">Verse text</v>`
+Example:
+```xml
+<bible>
+  <b n="Matthew">
+    <c n="5">
+      <v n="0">Add title here</v>
+      <v n="1">Verse text here</v>
+      <v n="2">Another verse...</v>
+    </c>
+  </b>
+</bible>
+```
+Known Issues:
+   - When verses that require red lettering have Jesus and others talking you have to seperate Jesus' quotes(") and others(') to only red letter Jesus' phrases
 
 ## Project Structure
 ```
 Bible/
 ├── bible/
 │   ├── __init__.py
-│   ├── main.py          # Entry point for the application
-│   ├── reader.py        # Handles parsing and data retrieval
-│   ├── redletter.py     # Manages red-letter text functionality
-│   ├── translations/    # Contains Bible translation XML files
-│   └── ...
-├── requirements.txt     # List of Python dependencies
-├── LICENSE              # License for the project
-├── README.md            # Project documentation
-└── ...
+│   ├── main.py            # Main application entry point
+│   ├── reader.py          # Parses and loads XML translations
+│   ├── redletter.py       # Red-letter detection logic
+│   ├── listwin.py         # Selectable list UI component
+│   ├── textwin.py         # Text rendering component
+│   ├── logs.py            # Centralized logging setup
+│   ├── translations/      # XML translations
+│   ├── red_letter_txt/
+│   │   ├── red.txt        # Source red-letter references
+│   │   └── parse_red_text.py  # Builds red-letter data files
+├── tests/                 # Unit tests
+├── requirements.txt       # Python dependencies
+├── README.md              # This file
+└── LICENSE                # GPL-3.0 License
 ```
 
 ## Known Issues
-- Ensure XML files are well-formed; malformed files may cause parsing errors.
-- Some features rely on consistent attribute naming (e.g., `n="..."`), so discrepancies may lead to bugs.
+- Malformed XML files will result in a runtime error — ensure all translations are valid.
+- Verse `n="0"` (used for titles) is not yet included in all translations.
+- Case-sensitive book names and mismatched tags may cause display issues.
 
 ## Contributing
-Contributions are welcome! To contribute:
-1. Fork the repository.
-2. Create a feature branch.
-3. Submit a pull request with detailed information about your changes.
+Contributions are welcome! 
 
 ## Acknowledgments
 - Original project: [rwev/bible](https://github.com/rwev/bible)
