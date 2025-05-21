@@ -145,8 +145,11 @@ class RedLetter:
         :return: True if the verse is a red-letter verse, False otherwise.
         """
         book = book.lower()
-        chapter= int(chapter)
-        verse = int(verse)
+        try:
+            chapter= int(chapter)
+            verse = int(verse)
+        except ValueError:
+            return False
 
         if book in self.red_letter_verses:
             if chapter in self.red_letter_verses[book]:

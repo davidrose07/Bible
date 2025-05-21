@@ -73,7 +73,7 @@ class Reader:
             .findall("c")
         ]
     
-    def get_verses_elements(self, book_str: str, chapter_str: str) -> List[Element[str]]:
+    def get_verses_elements(self, book_str: str, chapter_str: str) -> List[Element]:
         """Retrieve XML elements for all verses in a given book and chapter.
             Args:
                 book_str: The book name.
