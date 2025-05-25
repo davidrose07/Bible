@@ -42,6 +42,7 @@ source venv/bin/activate
 # Install required Python packages from requirements.txt
 if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
+    pip install -e .
 else
     echo "requirements.txt not found in the current directory."
 fi
