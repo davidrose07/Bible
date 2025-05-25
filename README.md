@@ -13,12 +13,20 @@ This is a modified version of the [Bible project](https://github.com/rwev/bible)
 - **Unit Tested:** Includes a growing suite of tests for critical components (reader, red-letter logic, UI).
 
 ## Requirements
-- Python 3.10 or later
+- Python 3.10
 - Recommended to use a virtual environment
 - Install dependencies:
+- Linux (Debian/Ubuntu preferred)
+- Bash shell
+- Internet connection (for package installation)
+
+## Setup
+
+Run the provided setup script to install Python, create a virtual environment, and install dependencies:
 
 ```bash
-pip install -r requirements.txt
+chmod +x setup.sh
+./setup.sh
 ```
 ## Running Tests
 
