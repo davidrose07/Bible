@@ -17,6 +17,14 @@ sudo apt update -y
 # Install Python 3.10
 sudo apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
 
+
+# Ensure pip is available for Python 3.10
+python3.10 -m ensurepip --upgrade
+
+# Optional: Install pipx (uncomment if you need it)
+# python3.10 -m pip install --user pipx
+# python3.10 -m pipx ensurepath
+
 # Check if Python 3.10 is installed correctly
 python3.10 --version
 
