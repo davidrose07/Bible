@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Exit on any command failure
-set -e
+set -e  # Exit immediately on error
 
 # Check for sudo
 if [ "$(id -u)" -ne 0 ]; then
@@ -9,41 +8,48 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-echo "🔧 Updating packages and installing build dependencies..."
-sudo apt update
-sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
-libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils \
-tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+# Check if python3.10 is already installed and working
+if command -v python3.10 >/dev/null 2>&1; then
+    echo "✅ Python 3.10 is already installed at $(command -v python3.10)"
+    PYTHON_BIN=$(command -v python3.10)
+else
+    echo "🔍 Python 3.10 not found. Proceeding with source installation..."
 
-# Download Python source
-cd ~
-if [ ! -f Python-3.10.12.tgz ]; then
-    echo "📥 Downloading Python 3.10.12..."
-    wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tgz
+    echo "🔧 Installing build dependencies..."
+    sudo apt update
+    sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils \
+    tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+    cd ~
+    if [ ! -f Python-3.10.13.tgz ]; then
+        echo "📥 Downloading Python 3.10.13 source..."
+        wget https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tgz
+    fi
+    tar -xf Python-3.10.13.tgz
+    cd Python-3.10.13
+
+    echo "⚙️ Building and installing Python 3.10.13..."
+    ./configure --enable-optimizations
+    make -j$(nproc)
+    sudo make altinstall
+
+    PYTHON_BIN="/usr/local/bin/python3.10"
+
+    if ! [ -x "$PYTHON_BIN" ]; then
+        echo "❌ Python 3.10 installation failed. Check the output above for errors."
+        exit 1
+    fi
 fi
-tar -xf Python-3.10.12.tgz
-cd Python-3.10.12
 
-echo "⚙️ Building and installing Python 3.10.12..."
-./configure --enable-optimizations
-make -j$(nproc)
-sudo make altinstall
-
-PYTHON_BIN="/usr/local/bin/python3.10"
-if ! [ -x "$PYTHON_BIN" ]; then
-    echo "❌ Python 3.10 installation failed. Check for errors above and ensure dependencies are installed."
-    echo "Try running: sudo apt install libffi-dev zlib1g-dev libssl-dev build-essential"
-    exit 1
-fi
-
-# Ensure pip is available and working
+# Ensure pip is available for Python 3.10
 $PYTHON_BIN -m ensurepip --upgrade || {
     echo "❌ Failed to install pip for Python 3.10."
     exit 1
 }
 $PYTHON_BIN -m pip install --upgrade pip
 
-# Project directory setup
+# Setup project directory
 PROJECT_DIR=~/Bible
 cd "$PROJECT_DIR"
 
@@ -60,7 +66,7 @@ source venv/bin/activate
 
 # Install dependencies
 if [ -f "requirements.txt" ]; then
-    echo "📦 Installing Python dependencies from requirements.txt..."
+    echo "📦 Installing packages from requirements.txt..."
     if ! pip install -r requirements.txt; then
         echo "❌ Failed to install packages from requirements.txt."
         deactivate
@@ -68,17 +74,15 @@ if [ -f "requirements.txt" ]; then
     fi
 
     if ! pip install -e .; then
-        echo "❌ Failed to install the current package with pip install -e ."
+        echo "❌ Failed to install the local package with pip install -e ."
         deactivate
         exit 1
     fi
 else
-    echo "❌ requirements.txt not found in $PROJECT_DIR. Cannot continue."
+    echo "❌ requirements.txt not found in the project directory."
     deactivate
     exit 1
 fi
 
-# Deactivate virtual environment
 deactivate
-
-echo "✅ Setup complete. Python 3.10 installed, virtual environment ready, and dependencies installed."
+echo "✅ Setup complete. Environment ready and dependencies installed."
