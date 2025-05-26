@@ -16,7 +16,10 @@ else
     echo "🔍 Python 3.10 not found. Proceeding with source installation..."
 
     echo "🔧 Installing build dependencies..."
-    dnf install -y @development-tools
+    dnf install -y \
+    make automake gcc gcc-c++ kernel-devel \
+    redhat-rpm-config
+
     dnf install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel \
         readline-devel sqlite-devel wget xz-devel tk-devel ncurses-devel \
         libuuid-devel libxml2-devel libxmlsec1-devel
