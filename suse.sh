@@ -16,7 +16,8 @@ zypper install -y gcc make wget curl \
     libopenssl-devel libffi-devel libbz2-devel \
     zlib-devel readline-devel sqlite3-devel \
     ncurses-devel tk-devel xz-devel \
-    libxml2-devel libxmlsec1-devel lzma-devel
+    libxml2-devel lzma-devel
+
 
 # Check for Python 3.10
 if command -v python3.10 >/dev/null 2>&1; then
