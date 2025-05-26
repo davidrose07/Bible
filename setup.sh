@@ -49,8 +49,9 @@ $PYTHON_BIN -m ensurepip --upgrade || {
 }
 $PYTHON_BIN -m pip install --upgrade pip
 
-# Setup project directory
-PROJECT_DIR=~/Bible
+# Setup project directory in user's home
+PROJECT_DIR="$(eval echo ~$SUDO_USER)/Bible"
+mkdir -p "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
 # Create and activate virtual environment
