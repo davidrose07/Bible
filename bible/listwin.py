@@ -1,8 +1,8 @@
 import curses
-from .logs import get_logger
+#from .logs import get_logger
 from typing import List, Tuple
 
-logger = get_logger(__name__)
+#logger = get_logger(__name__)
 
 class ListWindow:
     def __init__(self, win: curses.window, title: str, item_tuples: List[Tuple[int,str]], width: int) -> None:

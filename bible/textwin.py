@@ -1,9 +1,9 @@
 import curses
 import re
 from typing import List, Tuple
-from .logs import get_logger
+#from .logs import get_logger
 
-logger = get_logger(__name__)
+#logger = get_logger(__name__)
 
 class TextWindow:
     def __init__(self, win: curses.window, width: int) -> None:

@@ -8,17 +8,17 @@ from typing import List, Tuple, Any
 from .reader import Reader
 from .textwin import TextWindow
 from .listwin import ListWindow
-from .logs import get_logger
+#from .logs import get_logger
 
 TRANSLATIONS_WIDTH = 6
 BOOKS_WIDTH = 14
 CHAPTERS_WIDTH = 4
 VERSES_WIDTH = 4
 
-log_dir = os.path.join(os.path.expanduser("~"), "Bible", "logs")
-os.makedirs(log_dir, exist_ok=True)
+#log_dir = os.path.join(os.path.expanduser("~"), "Bible", "logs")
+#os.makedirs(log_dir, exist_ok=True)
 
-logger = get_logger(__name__)
+#logger = get_logger(__name__)
 h_en = Hyphenator("en_US")
 
 def make_enumeration(list_: List[str]) -> List[Tuple[int, str]]:

@@ -1,7 +1,7 @@
 from typing import Dict, List
-from .logs import get_logger
+#from .logs import get_logger
 
-logger = get_logger(__name__)
+#logger = get_logger(__name__)
 
 class RedLetter:
     """

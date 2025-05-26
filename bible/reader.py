@@ -4,11 +4,11 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import ElementTree, Element
 from typing import List, Tuple, Dict
 from .redletter import RedLetter
-from .logs import get_logger
+#from .logs import get_logger
 
 TRANSLATIONS_DIR = join(dirname(__file__), "translations")  # Path to the translations directory
 
-logger = get_logger(__name__)
+#logger = get_logger(__name__)
 
 class Reader:
     def __init__(self) -> None:
