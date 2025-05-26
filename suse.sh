@@ -35,7 +35,7 @@ else
         wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tgz
     fi
     tar -xf Python-3.10.12.tgz
-    cd Python-3.10.12
+    cd $REAL_HOME/Python-3.10.12
     ./configure --enable-optimizations
     make -j$(nproc)
     make altinstall
