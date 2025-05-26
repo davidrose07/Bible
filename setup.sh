@@ -22,14 +22,14 @@ else
     tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
     cd ~
-    if [ ! -f Python-3.10.13.tgz ]; then
+    if [ ! -f Python-3.10.12.tgz ]; then
         echo "📥 Downloading Python 3.10.13 source..."
-        wget https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tgz
+        wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tgz
     fi
-    tar -xf Python-3.10.13.tgz
-    cd Python-3.10.13
+    tar -xf Python-3.10.12.tgz
+    cd Python-3.10.12
 
-    echo "⚙️ Building and installing Python 3.10.13..."
+    echo "⚙️ Building and installing Python 3.10.12..."
     ./configure --enable-optimizations
     make -j$(nproc)
     sudo make altinstall
