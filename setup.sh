@@ -96,22 +96,28 @@ python -m bible.main
 EOF
 
 
-# Ensure run_bible.sh is executable
-chmod +x "$HOME/Bible/run_bible.sh"
+# Save the real user's home directory
+REAL_HOME="$(getent passwd "$SUDO_USER" | cut -d: -f6)"
 
-# Create ~/.local/bin if it doesn't exist
-mkdir -p "$HOME/.local/bin"
+# Path to run_bible.sh
+RUN_SCRIPT="$REAL_HOME/Bible/run_bible.sh"
 
-# Symlink Bible launcher
-ln -sf "$HOME/Bible/run_bible.sh" "$HOME/.local/bin/bible"
-echo "🔗 Symlink created: run the app with 'bible' (make sure ~/.local/bin is in your PATH)"
+# Ensure the script is executable
+chmod +x "$RUN_SCRIPT"
 
-# Try /usr/local/bin if writeable
+# Create ~/.local/bin in the user's home
+mkdir -p "$REAL_HOME/.local/bin"
+
+# Create the symlink inside ~/.local/bin
+ln -sf "$RUN_SCRIPT" "$REAL_HOME/.local/bin/bible"
+echo "🔗 Symlink created in $REAL_HOME/.local/bin/bible"
+
+# Optionally create global symlink (only if running as sudo and allowed)
 if [ -w /usr/local/bin ]; then
-    sudo ln -sf "$HOME/Bible/run_bible.sh" /usr/local/bin/bible
-    echo "🔗 Also linked to /usr/local/bin/bible"
+    ln -sf "$RUN_SCRIPT" /usr/local/bin/bible
+    echo "🔗 Also symlinked globally: /usr/local/bin/bible"
 else
     echo "⚠️  Cannot write to /usr/local/bin. Run manually if needed:"
-    echo "    sudo ln -sf \"$HOME/Bible/run_bible.sh\" /usr/local/bin/bible"
+    echo "    sudo ln -sf \"$RUN_SCRIPT\" /usr/local/bin/bible"
 fi
 
