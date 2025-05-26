@@ -99,17 +99,19 @@ EOF
 # Ensure run_bible.sh is executable
 chmod +x "$HOME/Bible/run_bible.sh"
 
-# Symlink to ~/.local/bin (non-root, always works)
+# Create ~/.local/bin if it doesn't exist
 mkdir -p "$HOME/.local/bin"
-ln -sf "$HOME/Bible/run_bible.sh" "$HOME/.local/bin/bible"
-echo "🔗 Symlink created: run the app with 'bible' (ensure ~/.local/bin is in your PATH)"
 
-# Try to symlink to /usr/local/bin if permitted
+# Symlink Bible launcher
+ln -sf "$HOME/Bible/run_bible.sh" "$HOME/.local/bin/bible"
+echo "🔗 Symlink created: run the app with 'bible' (make sure ~/.local/bin is in your PATH)"
+
+# Try /usr/local/bin if writeable
 if [ -w /usr/local/bin ]; then
-    ln -sf "$HOME/Bible/run_bible.sh" /usr/local/bin/bible
+    sudo ln -sf "$HOME/Bible/run_bible.sh" /usr/local/bin/bible
     echo "🔗 Also linked to /usr/local/bin/bible"
 else
-    echo "⚠️  Cannot write to /usr/local/bin. To link manually, run:"
+    echo "⚠️  Cannot write to /usr/local/bin. Run manually if needed:"
     echo "    sudo ln -sf \"$HOME/Bible/run_bible.sh\" /usr/local/bin/bible"
 fi
 
