@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.10
 
+import os
 import curses
 from hyphen import Hyphenator
 from textwrap import wrap
@@ -13,6 +14,9 @@ TRANSLATIONS_WIDTH = 6
 BOOKS_WIDTH = 14
 CHAPTERS_WIDTH = 4
 VERSES_WIDTH = 4
+
+log_dir = os.path.join(os.path.dirname(__file__), 'logs')
+os.makedirs(log_dir, exist_ok=True)
 
 logger = get_logger(__name__)
 h_en = Hyphenator("en_US")
