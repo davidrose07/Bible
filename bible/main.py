@@ -15,7 +15,7 @@ BOOKS_WIDTH = 14
 CHAPTERS_WIDTH = 4
 VERSES_WIDTH = 4
 
-log_dir = os.path.join(os.path.dirname(__file__), 'logs')
+log_dir = os.path.join(os.path.expanduser("~"), "Bible", "logs")
 os.makedirs(log_dir, exist_ok=True)
 
 logger = get_logger(__name__)
