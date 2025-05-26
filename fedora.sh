@@ -22,7 +22,7 @@ else
 
     dnf install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel \
         readline-devel sqlite-devel wget xz-devel tk-devel ncurses-devel \
-        libuuid-devel libxml2-devel libxmlsec1-devel
+        libuuid-devel libxml2-devel xmlsec1-devel
 
     cd ~
     if [ ! -f Python-3.10.12.tgz ]; then
