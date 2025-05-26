@@ -87,3 +87,22 @@ fi
 
 deactivate
 echo "✅ Setup complete. Environment ready and dependencies installed."
+
+# Create helper script to run the Bible app
+cat << 'EOF' > "$HOME/Bible/run_bible.sh"
+#!/bin/bash
+source "$HOME/Bible/venv/bin/activate"
+python -m bible.main
+EOF
+
+chmod +x "$HOME/Bible/run_bible.sh"
+
+# Create a symlink to /usr/local/bin (must have sudo permissions)
+if [ -w /usr/local/bin ]; then
+    ln -sf "$HOME/Bible/run_bible.sh" /usr/local/bin/bible
+    echo "🔗 Created symlink: you can now run the app with 'bible'"
+else
+    echo "⚠️  Cannot write to /usr/local/bin. Try running the following manually:"
+    echo "    sudo ln -sf \"$HOME/Bible/run_bible.sh\" /usr/local/bin/bible"
+fi
+
