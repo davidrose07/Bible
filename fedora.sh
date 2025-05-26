@@ -16,7 +16,7 @@ else
     echo "🔍 Python 3.10 not found. Proceeding with source installation..."
 
     echo "🔧 Installing build dependencies..."
-    dnf groupinstall -y "Development Tools"
+    dnf install -y @development-tools
     dnf install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel \
         readline-devel sqlite-devel wget xz-devel tk-devel ncurses-devel \
         libuuid-devel libxml2-devel libxmlsec1-devel
@@ -85,12 +85,14 @@ fi
 
 deactivate
 
-# Create run script
-cat << 'EOF' > "$PROJECT_DIR/run_bible.sh"
+cat << EOF > "$PROJECT_DIR/run_bible.sh"
 #!/bin/bash
 source "$PROJECT_DIR/venv/bin/activate"
 python -m bible.main
 EOF
+
+
+
 chmod +x "$PROJECT_DIR/run_bible.sh"
 
 REAL_HOME="$(getent passwd "$SUDO_USER" | cut -d: -f6)"
