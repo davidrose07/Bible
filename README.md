@@ -28,6 +28,11 @@ Run the provided setup script to install Python, create a virtual environment, a
 chmod +x setup.sh
 ./setup.sh
 ```
+
+If successful, a virtual environment will be created in the project directory and a `bible` command will be available globally (via symbolic link) to launch the app.
+
+If the setup script fails (e.g., Python 3.10 installation fails or a package is missing), error messages will guide the user on how to resolve and re-run the script.
+
 ## Running Tests
 
 This project includes unit tests for all major components.
@@ -44,15 +49,15 @@ Ensure `pytest` is installed (included in `requirements.txt`).
    git clone https://github.com/davidorse07/Bible.git
    cd Bible
    ```
-2. Install dependencies (if any):
+2. Run the setup:
    ```bash
-   pip install -r requirements.txt
+   ./setup.sh
    ```
 
 ## Usage
 Run the application using the following command:
 ```bash
-python3 -m bible.main
+bible
 ```
 
 ### Adding Translations
@@ -77,7 +82,7 @@ Example:
 </bible>
 ```
 Known Issues:
-   - When verses that require red lettering have Jesus and others talking you have to seperate Jesus' quotes(") and others(') to only red letter Jesus' phrases
+   - When verses that require red lettering have Jesus and others talking you have to separate Jesus' quotes(") and others(') to only red letter Jesus' phrases
 
 ## Project Structure
 ```
@@ -96,6 +101,8 @@ Bible/
 │   │   └── parse_red_text.py  # Builds red-letter data files
 ├── tests/                 # Unit tests
 ├── requirements.txt       # Python dependencies
+├── setup.sh               # Automated setup script
+├── run_bible.sh           # Script to launch the app via virtualenv
 ├── README.md              # This file
 └── LICENSE                # GPL-3.0 License
 ```
@@ -113,4 +120,3 @@ Contributions are welcome!
 
 ## License
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0). You can view the full license text in the `LICENSE` file or at [https://www.gnu.org/licenses/gpl-3.0.en.html](https://www.gnu.org/licenses/gpl-3.0.en.html).
-
