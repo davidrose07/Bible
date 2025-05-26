@@ -95,14 +95,21 @@ source "$HOME/Bible/venv/bin/activate"
 python -m bible.main
 EOF
 
+
+# Ensure run_bible.sh is executable
 chmod +x "$HOME/Bible/run_bible.sh"
 
-# Create a symlink to /usr/local/bin (must have sudo permissions)
+# Symlink to ~/.local/bin (non-root, always works)
+mkdir -p "$HOME/.local/bin"
+ln -sf "$HOME/Bible/run_bible.sh" "$HOME/.local/bin/bible"
+echo "🔗 Symlink created: run the app with 'bible' (ensure ~/.local/bin is in your PATH)"
+
+# Try to symlink to /usr/local/bin if permitted
 if [ -w /usr/local/bin ]; then
     ln -sf "$HOME/Bible/run_bible.sh" /usr/local/bin/bible
-    echo "🔗 Created symlink: you can now run the app with 'bible'"
+    echo "🔗 Also linked to /usr/local/bin/bible"
 else
-    echo "⚠️  Cannot write to /usr/local/bin. Try running the following manually:"
+    echo "⚠️  Cannot write to /usr/local/bin. To link manually, run:"
     echo "    sudo ln -sf \"$HOME/Bible/run_bible.sh\" /usr/local/bin/bible"
 fi
 
