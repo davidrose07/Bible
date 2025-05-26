@@ -2,11 +2,7 @@
 
 set -e  # Exit on error
 
-# Ensure root access
-if [ "$(id -u)" -ne 0 ]; then
-    echo "❌ Please run this script with sudo or as root."
-    exit 1
-fi
+
 
 # Save real user's home (important when using sudo)
 REAL_USER=${SUDO_USER:-$USER}
