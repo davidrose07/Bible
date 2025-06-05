@@ -83,7 +83,7 @@ if ! command -v docker &> /dev/null; then
 
         case "$DISTRO" in
             ubuntu|debian) install_docker_debian ;;
-            arch|archarm)          install_docker_arch ;;
+            arch|archarm)  install_docker_arch ;;
             fedora|rhel)   install_docker_fedora ;;
             alpine)        install_docker_alpine ;;
             *)             echo "Unsupported Linux distro: $DISTRO" && exit 1 ;;
@@ -104,7 +104,7 @@ fi
 
 # Build and run
 echo "Building Docker image..."
-docker build -t "$APP_NAME" "$DOCKERFILE_DIR"
+sudo docker build -t "$APP_NAME" "$DOCKERFILE_DIR"
 
 echo "Running Docker container..."
-docker run -it "$APP_NAME"
+sudo docker run -it "$APP_NAME"
