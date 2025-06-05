@@ -19,7 +19,12 @@ VERSES_WIDTH = 4
 #os.makedirs(log_dir, exist_ok=True)
 
 #logger = get_logger(__name__)
-h_en = Hyphenator("en_US")
+# Future use if Hypenator is needed
+""" try:
+    h_en = Hyphenator('en_US')
+except Exception as e:
+    print("Hypenation failed to load")
+    h_en = None """
 
 def make_enumeration(list_: List[str]) -> List[Tuple[int, str]]:
     """
