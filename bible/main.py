@@ -8,17 +8,15 @@ from typing import List, Tuple, Any
 from .reader import Reader
 from .textwin import TextWindow
 from .listwin import ListWindow
-#from .logs import get_logger
+from .logs import get_logger
 
 TRANSLATIONS_WIDTH = 6
 BOOKS_WIDTH = 14
 CHAPTERS_WIDTH = 4
 VERSES_WIDTH = 4
 
-#log_dir = os.path.join(os.path.expanduser("~"), "Bible", "logs")
-#os.makedirs(log_dir, exist_ok=True)
+logger = get_logger(__name__)
 
-#logger = get_logger(__name__)
 # Future use if Hypenator is needed
 """ try:
     h_en = Hyphenator('en_US')
@@ -54,6 +52,8 @@ class Main:
 
         self.start_input_loop()      # Start the input event loop
    
+        logger.info("Bible App started. . .")
+        
     def initialize_reader(self) -> None:
         """Initialize the reader object for reading text data."""
         self.reader = Reader()
@@ -137,6 +137,7 @@ class Main:
         verse = self.verses_win.get_selection_tuple()[1]
 
         text_title = f"{book_name} {chapter_name}:{verse} [{trans_name}]"
+        logger.info(f"Displaying: {text_title}")
 
         verse_start = int(verse)  # Ensure verse is an integer
         formatted_text_tuples: List[Tuple[str, bool, bool]] = self.reader.get_chapter_text(book_name, chapter_name, verse_start)

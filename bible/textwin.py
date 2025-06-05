@@ -1,9 +1,9 @@
 import curses
 import re
 from typing import List, Tuple
-#from .logs import get_logger
+from .logs import get_logger
 
-#logger = get_logger(__name__)
+logger = get_logger(__name__)
 
 class TextWindow:
     def __init__(self, win: curses.window, width: int) -> None:
@@ -13,7 +13,7 @@ class TextWindow:
         :param win: The parent curses window in which the text window is embedded.
         :param width: The desired width of the text window.
         """
-        
+        logger.info("Initializing TextWindow. . .")
         # The parent window containing this text window
         self._outer_win: curses.window = win
         self._outer_win.box()  # Draw a border around the outer window

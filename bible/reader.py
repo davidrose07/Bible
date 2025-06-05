@@ -4,20 +4,23 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import ElementTree, Element
 from typing import List, Tuple, Dict
 from .redletter import RedLetter
-#from .logs import get_logger
+from .logs import get_logger
 
 TRANSLATIONS_DIR = join(dirname(__file__), "translations")  # Path to the translations directory
 
-#logger = get_logger(__name__)
+logger = get_logger(__name__)
 
 class Reader:
     def __init__(self) -> None:
         """Initialize the Reader object and load available Bible translations into memory."""
+        logger.info("Initialzing Reader Object. . .")
         self.red_letter = RedLetter()
-        self._load_roots() 
+        self._load_roots()
+         
     
     def _load_roots(self) -> None:
         """Load root elements for all available translations from XML files."""
+        logger.info("Loading roots. . .")
         self._current_root = (None, None)  # Initialize the current root as None
         self._roots: Dict = {}                   # Dictionary to store root elements by translation
         for ts in self.get_translations():
@@ -41,6 +44,7 @@ class Reader:
         if self._current_root[0] == translation_str:
             return
         self._current_root = (translation_str, self._roots[translation_str])
+        logger.info(f"Current root set to: {self._current_root}")
 
     def get_translations(self) -> List[str]:
         """Retrieve a list of available translation names by reading XML files in the translations directory.

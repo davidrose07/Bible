@@ -14,7 +14,7 @@ venv/
 ENV/
 build/
 dist/
-Version1/
+linux_setup_scripts/
 *.egg-info/
 .eggs/
 

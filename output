@@ -1,0 +1,62 @@
+.
+├── bible
+│   ├── __init__.py
+│   ├── listwin.py
+│   ├── logs
+│   ├── logs.py
+│   ├── main.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-310.pyc
+│   │   ├── listwin.cpython-310.pyc
+│   │   ├── logs.cpython-310.pyc
+│   │   ├── main.cpython-310.pyc
+│   │   ├── reader.cpython-310.pyc
+│   │   ├── redletter.cpython-310.pyc
+│   │   └── textwin.cpython-310.pyc
+│   ├── reader.py
+│   ├── redletter.py
+│   ├── red_letter_txt
+│   │   ├── 1 corinthian_red_letter.txt
+│   │   ├── 2 corinthian_red_letter.txt
+│   │   ├── acts_red_letter.txt
+│   │   ├── john_red_letter.txt
+│   │   ├── luke_red_letter.txt
+│   │   ├── mark_red_letter.txt
+│   │   ├── matthew_red_letter.txt
+│   │   ├── parse_red_text.py
+│   │   ├── __pycache__
+│   │   │   └── parse_red_text.cpython-310.pyc
+│   │   ├── red.txt
+│   │   └── revelation_red_letter.txt
+│   ├── textwin.py
+│   └── translations
+│       ├── AMP.xml
+│       ├── ESV.xml
+│       ├── KJV.xml
+│       ├── NIV.xml
+│       └── NLT.xml
+├
+├── Dockerfile
+├── install.sh
+├── LICENSE
+├── MANIFEST.in
+
+├── README.md
+├── requirements.txt
+├── setup.py
+
+├── tests
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-310.pyc
+│   │   ├── test_listwin.cpython-310-pytest-8.3.5.pyc
+│   │   ├── test_parse_red_text.cpython-310-pytest-8.3.5.pyc
+│   │   ├── test_reader.cpython-310-pytest-8.3.5.pyc
+│   │   ├── test_redletter.cpython-310-pytest-8.3.5.pyc
+│   │   └── test_textwin.cpython-310-pytest-8.3.5.pyc
+│   ├── test_listwin.py
+│   ├── test_reader.py
+│   ├── test_redletter.py
+│   └── test_textwin.py
+├── venv
+│   

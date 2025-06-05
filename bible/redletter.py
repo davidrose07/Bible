@@ -1,7 +1,7 @@
 from typing import Dict, List
-#from .logs import get_logger
+from .logs import get_logger
 
-#logger = get_logger(__name__)
+logger = get_logger(__name__)
 
 class RedLetter:
     """
@@ -12,6 +12,7 @@ class RedLetter:
         Initialize the red_letter_verses dictionary with references to red-letter verses for specific books.
         The data maps book names (lowercase) to a dictionary of chapter numbers and lists of red-letter verse numbers.
         """
+        logger.info("Initializing RedLetter Object. . . ")
         self.red_letter_verses: Dict[str, Dict[int, List[int]]] = {
             'matthew': {3:[15],
                         4:[4, 7, 10, 17, 19],
