@@ -83,7 +83,7 @@ if ! command -v docker &> /dev/null; then
 
         case "$DISTRO" in
             ubuntu|debian) install_docker_debian ;;
-            arch)          install_docker_arch ;;
+            arch|archarm)          install_docker_arch ;;
             fedora|rhel)   install_docker_fedora ;;
             alpine)        install_docker_alpine ;;
             *)             echo "Unsupported Linux distro: $DISTRO" && exit 1 ;;
