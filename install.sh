@@ -5,89 +5,80 @@ set -e
 APP_NAME="bible"
 DOCKERFILE_DIR="$(dirname "$0")"
 
-# Detect OS and distro
+# Detect OS
 OS="$(uname -s)"
-DISTRO=""
 
-get_distro() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        DISTRO=$ID
-    fi
-}
-
-# Docker installer for Debian/Ubuntu
-install_docker_debian() {
-    echo "Installing Docker on Debian/Ubuntu..."
-
+# Docker installer by package manager
+install_docker_apt() {
+    echo "Installing Docker using apt..."
     sudo apt-get update
     sudo apt-get install -y \
         ca-certificates curl gnupg lsb-release apt-transport-https
 
     sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/$DISTRO/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release && echo "$ID")/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
     echo \
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-      https://download.docker.com/linux/$DISTRO $(lsb_release -cs) stable" | \
+      https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') \
+      $(lsb_release -cs) stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-
-    echo "Docker installed."
 }
 
-# Docker installer for Arch Linux
-install_docker_arch() {
-    echo "Installing Docker on Arch Linux..."
+install_docker_pacman() {
+    echo "Installing Docker using pacman..."
     sudo pacman -Sy --noconfirm docker
-    echo "Docker installed."
 }
 
-# Docker installer for Fedora/RHEL
-install_docker_fedora() {
-    echo "Installing Docker on Fedora/RHEL..."
+install_docker_dnf() {
+    echo "Installing Docker using dnf..."
     sudo dnf -y install dnf-plugins-core
     sudo dnf config-manager \
         --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
     sudo dnf install -y docker-ce docker-ce-cli containerd.io
-    echo "Docker installed."
 }
 
-# Docker installer for Alpine
-install_docker_alpine() {
-    echo "Installing Docker on Alpine Linux..."
+install_docker_apk() {
+    echo "Installing Docker using apk..."
     sudo apk add docker
-    echo "Docker installed."
 }
 
-# macOS / Windows placeholders
 install_docker_mac() {
     echo "Please install Docker Desktop manually from https://www.docker.com/products/docker-desktop"
     exit 1
 }
 
-install_docker_windows() {
-    echo "Please install Docker Desktop manually from https://www.docker.com/products/docker-desktop"
-    exit 1
+
+install_docker_zypper() {
+    echo "Installing Docker using zypper..."
+    sudo zypper refresh
+    sudo zypper install -y docker
+    echo "Docker installed."
 }
+
 
 # Determine what to do
 if ! command -v docker &> /dev/null; then
     echo "Docker not found. Installing..."
 
     if [[ "$OS" == "Linux" ]]; then
-        get_distro
-        echo "Detected Linux distro: $DISTRO"
-
-        case "$DISTRO" in
-            ubuntu|debian) install_docker_debian ;;
-            arch|archarm)  install_docker_arch ;;
-            fedora|rhel)   install_docker_fedora ;;
-            alpine)        install_docker_alpine ;;
-            *)             echo "Unsupported Linux distro: $DISTRO" && exit 1 ;;
-        esac
+        if command -v apt-get &> /dev/null; then
+            install_docker_apt
+        elif command -v pacman &> /dev/null; then
+            install_docker_pacman
+        elif command -v dnf &> /dev/null; then
+            install_docker_dnf
+        elif command -v apk &> /dev/null; then
+            install_docker_apk
+        elif command -v zypper &> /dev/null; then
+            install_docker_zypper
+        else
+            echo "Unsupported or unknown package manager."
+            exit 1
+        fi
 
         sudo systemctl enable --now docker
     elif [[ "$OS" == "Darwin" ]]; then
