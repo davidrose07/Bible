@@ -51,10 +51,14 @@ install_docker_mac() {
     exit 1
 }
 
-install_docker_windows() {
-    echo "Please install Docker Desktop manually from https://www.docker.com/products/docker-desktop"
-    exit 1
+
+install_docker_zypper() {
+    echo "Installing Docker using zypper..."
+    sudo zypper refresh
+    sudo zypper install -y docker
+    echo "Docker installed."
 }
+
 
 # Determine what to do
 if ! command -v docker &> /dev/null; then
@@ -69,6 +73,8 @@ if ! command -v docker &> /dev/null; then
             install_docker_dnf
         elif command -v apk &> /dev/null; then
             install_docker_apk
+        elif command -v zypper &> /dev/null; then
+            install_docker_zypper
         else
             echo "Unsupported or unknown package manager."
             exit 1
