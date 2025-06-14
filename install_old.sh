@@ -34,37 +34,12 @@ install_docker_pacman() {
 }
 
 install_docker_dnf() {
-    echo "🔧 Installing Docker using dnf..."
-
-    # Step 1: Ensure dnf-plugins-core is installed
-    if ! sudo dnf -y install dnf-plugins-core; then
-        echo "❌ Failed to install dnf-plugins-core."
-        return 1
-    fi
-
-    # Step 2: Try to add Docker repo with config-manager
-    if ! sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo; then
-        echo "⚠️ config-manager failed. Falling back to manual repo setup."
-        sudo tee /etc/yum.repos.d/docker-ce.repo > /dev/null <<EOF
-[docker-ce-stable]
-name=Docker CE Stable - \$basearch
-baseurl=https://download.docker.com/linux/fedora/\$releasever/\$basearch/stable
-enabled=1
-gpgcheck=1
-gpgkey=https://download.docker.com/linux/fedora/gpg
-EOF
-    fi
-
-    # Step 3: Install Docker packages
-    if ! sudo dnf install -y docker-ce docker-ce-cli containerd.io; then
-        echo "❌ Failed to install Docker packages."
-        return 1
-    fi
-
-    # Step 4: Enable and start Docker service
-    #sudo systemctl enable --now docker
+    echo "Installing Docker using dnf..."
+    sudo dnf -y install dnf-plugins-core
+    sudo dnf config-manager \
+        --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+    sudo dnf install -y docker-ce docker-ce-cli containerd.io
 }
-
 
 install_docker_apk() {
     echo "Installing Docker using apk..."
@@ -118,39 +93,9 @@ else
     echo "Docker is already installed."
 fi
 
-#Make sure docker service is running
-check_docker_service() {
-    if systemctl is-active --quiet docker && systemctl is-enabled --quiet docker; then
-        echo "✅ Docker is running and enabled."
-        return 0
-    else
-        echo "❌ Docker is not running and/or not enabled."
-        return 1
-    fi
-}
-
-if check_docker_service; then
-    echo "Proceeding with Docker operations..."
-else
-    echo "Attempting to start and enable Docker..."
-    sudo systemctl start docker
-    sudo systemctl enable docker
-fi
-
 # Build and run
 echo "Building Docker image..."
 sudo docker build -t "$APP_NAME" "$DOCKERFILE_DIR"
 
-# Create wrapper script for 'bible' command
-echo "Creating system-wide 'bible' command..."
-
-sudo tee /usr/local/bin/bible > /dev/null <<EOF
-#!/bin/bash
-sudo docker run -it --rm $APP_NAME
-EOF
-
-sudo chmod +x /usr/local/bin/bible
-
-echo "✅ You can now run your app with: bible"
-
-
+echo "Running Docker container..."
+sudo docker run -it "$APP_NAME"
