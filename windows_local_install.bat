@@ -38,6 +38,6 @@ del _check_curses.py
 
 REM Optionally run your app
 echo ✅ Setup complete. You can now run your app using:
-echo    python -m your_module_name
+echo    python -m bible
 
 endlocal
