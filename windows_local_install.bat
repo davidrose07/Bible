@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
 REM Check for Python
 where python >nul 2>nul
@@ -8,36 +8,35 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Install your package with setup.py
-echo 🛠️ Installing package...
+REM Install your package
+echo 🛠️ Installing local package from setup.py...
 python setup.py install
 if errorlevel 1 (
     echo ❌ setup.py installation failed.
     exit /b 1
 )
 
-REM Check for import errors
-echo 🔍 Checking for missing modules...
+REM Create temp Python script to check for curses
+set "TEMPFILE=%TEMP%\_check_curses.py"
+echo import sys> "%TEMPFILE%"
+echo try:>> "%TEMPFILE%"
+echo     import curses>> "%TEMPFILE%"
+echo except ImportError:>> "%TEMPFILE%"
+echo     print("missing:curses")>> "%TEMPFILE%"
 
-(
-echo import sys
-echo try:
-echo     import curses
-echo except ImportError:
-echo     print("missing:curses")
-) > _check_curses.py
-
-for /f %%i in ('python _check_curses.py') do (
+REM Run check
+for /f %%i in ('python "%TEMPFILE%"') do (
     if "%%i"=="missing:curses" (
-        echo ⚠️ curses module not found. Attempting to install windows-curses...
+        echo ⚠️  curses module not found. Installing windows-curses...
         pip install windows-curses
     )
 )
 
-del _check_curses.py
+REM Clean up
+del "%TEMPFILE%" >nul 2>&1
 
-REM Optionally run your app
-echo ✅ Setup complete. You can now run your app using:
-echo    python -m bible
+REM Finished
+echo ✅ Setup complete. You can now run:
+echo    bible
 
 endlocal
